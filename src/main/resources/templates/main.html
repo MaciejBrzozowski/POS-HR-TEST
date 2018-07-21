@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="application/json">
+    <title>Title</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://www.json.org/json2.js"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{css/main.css}">
+</head>
+<body>
+<script type="text/javascript">
+function postRequest(dataId,url){
+    var barcodeValue = document.getElementsByName(dataId)[0].value
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var json = JSON.parse(xhr.responseText);
+            console.log(xhr.status);
+        }else{if (xhr.readyState === 4 && (xhr.status === 404 || xhr.status === 422)){
+            alert(xhr.responseText)
+            }
+        }
+    };
+    var data = JSON.stringify({"barcode": ""+barcodeValue+""});
+    xhr.send(data);
+}
+
+
+
+
+
+</script>
+<script type="text/javascript">
+var txt2 = "";
+function getRequest(url,printToLCD,printTo){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var json = JSON.parse(xhr.responseText);
+            if(printToLCD === true){
+            txt2 = "";
+            txt2 += "<table border='1'>";
+            txt2 += "<tr><td>Name</td><td>Price</td><td>Quantity</td>";
+            for (x in json) {
+                txt2 += "<tr>";
+                txt2 += "<td>" + json[x].name + "</td>";
+                txt2 += "<td>" + json[x].price + "</td>";
+                txt2 += "<td>" + json[x].quantity + "</td>";
+                txt2 += "</tr>";
+            }
+            txt2 += "</table>";
+            document.getElementById("LCD").innerHTML = txt2;
+            }
+            if(printTo !== null){
+            var txt = "";
+            var totalPrice = 0;
+            txt += "<table border='1'>";
+            txt += "<tr><td>Name</td><td>Price</td><td>Quantity</td>";
+            for (x in json) {
+            totalPrice += json[x].price*json[x].quantity;
+                txt += "<tr>";
+                txt += "<td>" + json[x].name + "</td>";
+                txt += "<td>" + json[x].price + "</td>";
+                txt += "<td>" + json[x].quantity + "</td>";
+                txt += "</tr>";
+            }
+            txt += "</table>";
+            txt += "<a>Total price: "+totalPrice+"</a>"
+            document.getElementById(printTo).innerHTML = txt;
+            }
+        }
+    };
+    xhr.send();
+}
+
+
+
+
+
+</script>
+
+<div class="main">
+    <div class="column">
+        <p>BARCODE SCANNER</p>
+
+        <div class="barcodeScanner">
+            <form onsubmit='postRequest("barcode","/pos/addProduct");getRequest("/pos/getProducts",true,null)'>
+                <input type="text" name="barcode"/>
+                <input type="submit"/>
+            </form>
+        </div>
+    </div>
+    <div class="column">
+        <p>LCD DISPLAY</p>
+
+        <div class="LCD" ID="LCD">
+
+        </div>
+    </div>
+    <div class="column">
+        <p>PRINT BUTTON</p>
+
+        <div class="buttons">
+            <button type="button" onclick="getRequest('/pos/print',false,'printer')">EXIT</button>
+        </div>
+    </div>
+    <div class="column">
+        <p>PRINTER</p>
+        <div class="printer" id="printer">
+        </div>
+    </div>
+</div>
+</body>
+</html>

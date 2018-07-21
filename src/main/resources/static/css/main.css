@@ -1,0 +1,30 @@
+.barcodeScanner{
+  background: #ff0000;
+      border: solid;
+      height: 99%;
+}
+
+.buttons{
+    background: #00ff00;
+    border: solid;
+    height: 99%;
+
+}
+
+.printer{
+    background: #00ffff;
+    border: solid;
+    height: 99%;
+}
+
+.column {
+    float: left;
+    width: 25%;
+    height: 99%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}

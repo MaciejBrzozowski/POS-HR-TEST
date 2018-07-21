@@ -1,0 +1,126 @@
+= POINT OF SALE - HR TEST
+:toc2:
+:source-highlighter: highlightjs
+
+:project-version: 1.0
+:docVersion: 1.0
+Version {project-version}
+
+Version {docVersion} Version Date {docdate}
+
+:imagesdir: ../asciidoc/resources/
+:sectnums:
+
+:doctype: book
+:source-highlighter: coderay
+:listing-caption: Listing
+:pdf-page-size: A4
+:icons: font
+:icon-set: pf
+
+:sourcedir-root: {sourcedir}
+:sourcedir: ../main/java/
+:asciidocdir: ../../src/asciidoc
+:asciidocdir: ..src/doc
+
+== BASIC INFO
+
+Server port: 9443 +
+No basic aut required +
+If run on local machine use `http://localhost:9443/` to get web page.
+
+== REST API
+
+=== CHECK BARCODE
+|=====
+|URL|/pos/checkBarcode
+|Method| POST
+|URL Params| none
+|Data Params|Example: `{"barcode":"1234"}`
+|Success Response|
+Example:
+Code: 200 OK
+Content: `{"message":"Product exists in DB"}`
+|Error Response| Example: +
+Code: 404 UNAUTHORIZED
+Content: `{
+         "timestamp": "2018-07-21T21:39:50.845+0000",
+         "status": 404,
+         "error": "Not Found",
+         "message": "Product not found!",
+         "path": "/pos/checkBarcode"
+         }`
+|Description|Method check existing of product with specified barcode not adding to current order.
+|=====
+
+=== ADD PRODUCT
+|=====
+|URL|/pos/addProduct
+|Method| POST
+|URL Params| none
+|Data Params|Example: `{"barcode":"1234"}`
+|Success Response|
+Example:
+Code: 204 NO CONTENT
+|Error Response| Example: +
+Code: 404 UNAUTHORIZED
+Content: `{
+         "timestamp": "2018-07-21T21:39:50.845+0000",
+         "status": 404,
+         "error": "Not Found",
+         "message": "Product not found!",
+         "path": "/pos/addBarcode"
+         }`
+|Description|Method to add product with specified barcode to current order.
+|=====
+
+=== GET PRODUCTS
+|=====
+|URL|/pos/getProduct
+|Method| GET
+|URL Params| none
+|Data Params|none
+|Success Response|
+Example:
+Code: 200
+Content: `{[
+  {
+"name": "milk",
+"price": 22.33,
+"quantity": 1
+}
+]}`
+|Description|Method to obtain products added to current order without closing it. If no product is added method return empty array.
+|=====
+
+
+=== PRINT
+|=====
+|URL|/pos/print
+|Method| GET
+|URL Params| none
+|Data Params|none
+|Success Response|
+Example:
+Code: 200
+Content: `{[
+  {
+"name": "milk",
+"price": 22.33,
+"quantity": 1
+}
+]}`
+|Description|Method to obtain products added to current and clears internal values.If no product is added method return empty array. After response new order can be created.
+|=====
+
+IMPORTANT: Sum of all products is performed by web view.
+
+== WEB PAGE
+NOTE: Not quite good realisation of web view.
+
+Web page is divided to 4 columns with descriptions. +
+Page uses javascript to access rest API and generate outputs no page.
+Error status from server is shown as alert in browser. +
+Javascript elements calculates total sum of products from `"print"` endpoint. +
+
+WARNING: Values in `LCD` and alerts not allways are displayed properly. LCD elements can de displayed for a short time. Alerts not always gets body from response and than displays empty alert.
