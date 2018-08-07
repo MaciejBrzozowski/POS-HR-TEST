@@ -5,7 +5,7 @@ import pl.brzozowski.maciej.recrutationpointofsale.commons.Product;
 import java.util.HashMap;
 
 
-public class InMemoryDB implements CrudInterface<Product, String> {
+public class InMemoryDB {
 
     private static HashMap<String, Product> internalDB = new HashMap<>();
 
@@ -14,7 +14,6 @@ public class InMemoryDB implements CrudInterface<Product, String> {
         initializeDB();
     }
 
-    @Override
     public int create(String barcode, Product product) {
         Product readProduct = internalDB.get(barcode);
         if (barcode != null &&
@@ -27,12 +26,10 @@ public class InMemoryDB implements CrudInterface<Product, String> {
         return -1;
     }
 
-    @Override
     public Product read(String barcode) {
         return internalDB.get(barcode);
     }
 
-    @Override
     public int update(String barcode, Product product) {
         Product productRead = internalDB.get(barcode);
         if (productRead != null) {
@@ -45,7 +42,6 @@ public class InMemoryDB implements CrudInterface<Product, String> {
         return -1;
     }
 
-    @Override
     public int delete(String barcode) {
         // why it is not implemented? Only administrator can delete entries in DB :P :D
         return 0;
