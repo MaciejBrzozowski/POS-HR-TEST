@@ -25,14 +25,11 @@ import static pl.brzozowski.maciej.recrutationpointofsale.configuration.UrlTempl
 @RequiredArgsConstructor
 public class MainController {
 
-    @Autowired
-    private Logger logger;
-    @Autowired
-    private BarcodeService barcodeService;
-    @Autowired
-    private ReceiptService receiptService;
-    @Autowired
-    private PrintService printService;
+
+    private final Logger logger;
+    private final BarcodeService barcodeService;
+    private final ReceiptService receiptService;
+    private final PrintService printService;
 
     @PostMapping(path = CHECK_BARCODE)
     public SimpleResponse checkBarcode(@RequestBody Barcode productBarcode) {

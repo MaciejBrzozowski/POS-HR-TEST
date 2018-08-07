@@ -1,22 +1,16 @@
 package pl.brzozowski.maciej.recrutationpointofsale.service;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.brzozowski.maciej.recrutationpointofsale.commons.Product;
 import pl.brzozowski.maciej.recrutationpointofsale.repository.UserOrder;
 
-
 @Service
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ReceiptService {
 
-    @Autowired
-    private UserOrder userOrder;
-    @Autowired
-    private BarcodeService barcodeService;
+    private final UserOrder userOrder;
+    private final BarcodeService barcodeService;
 
     public Product[] getUserOrder() {
         return userOrder.readAll();
